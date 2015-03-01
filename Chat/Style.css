@@ -14,9 +14,8 @@
     border-radius: 30px;
     } 
     .b1{
-        background: #ffffff;        
-        top: 10px;
-        left:300px;
+        background: #ffffff;
+        left: -50px;        
         position: relative;
         display: inline-block;
         border-radius: 30px;
