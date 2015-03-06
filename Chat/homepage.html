@@ -6,13 +6,14 @@
         <script>
             function isNick() {
                 var str = document.getElementById("nick").value;
-                if (isEmpty(str)) alert = "Ïîëå ïóñòîå";
+                if (isEmpty(str)) alert = "ÃÃ®Ã«Ã¥ Ã¯Ã³Ã±Ã²Ã®Ã¥";
                 else alert = "Blah-blah"
             }
             function isEmpty(str) {
                 return (str == null) || (str.length == 0);
             }
   </script>
+  <!--Move your JS to separate .js file and inlcude it into this project as external script-->
         <link rel="stylesheet" href="Style.css" type"text/css">
         <style>
             @media screen {
@@ -21,13 +22,16 @@
             }
 
         </style>
+        <!--The same for CSS styles: use external file, include here as external stylseet-->
     </head>
     <body>
         <h1 align="center" style="color:#000000" >CHATROOM by ZeddzZ version 0.1</h1> 
+        <!--Do not specify style for DOM elements explicitly, use CSS for it-->
         <button class="b3">Connect...</button>
         <button class="b5">Settings</button>
         <button class="b6">Help</button>
         <button class="b7">About</button>
+        <!--Use more vrbose userfriendly names for custom classes, e.g. connect-btn, help-btn, etc.-->
         <p>
             <input type="text" class="i1" size="40" id="nick" placeholder="Nickname" >
             <label for="text">
