@@ -1,3 +1,9 @@
+/*
+Think about using bootstrap components and grid model
+it would provide more responsive layout model (control sizes will be scaled automatically 
+depending on screen resolution and browser window size),
+minify custom CSS usage and provide a lot of pretty components
+*/
 .h1 
 {
     text-align: center;
