@@ -3,17 +3,8 @@
 <html>
     <head>
         <title> Chat </title>
-        <script>
-            function isNick() {
-                var str = document.getElementById("nick").value;
-                if (isEmpty(str)) alert = "Поле пустое";
-                else alert = "Blah-blah"
-            }
-            function isEmpty(str) {
-                return (str == null) || (str.length == 0);
-            }
-  </script>
-        <link rel="stylesheet" href="Style.css" type"text/css">
+        <script type="text/javascript" src="homepage/js.js"></script>
+        <link rel="stylesheet" href="homepage/Style.css" type"text/css">
         <style>
             @media screen {
                 H1{
@@ -23,28 +14,35 @@
         </style>
     </head>
     <body>
+	<div>
+	<section class="chat">
         <h1 align="center" style="color:#000000" >CHATROOM by ZeddzZ version 0.1</h1> 
         <button class="b3">Connect...</button>
         <button class="b5">Settings</button>
         <button class="b6">Help</button>
         <button class="b7">About</button>
-        <p>
-            <input type="text" class="i1" size="40" id="nick" placeholder="Nickname" >
-            <label for="text">
-            </label>
-            <button type="submit" class="b1">Save Nickname</button>
-        </p>
-        <form>
-            
+		<button class="b9" id="connection" style="backgroung:red" disabled>Failed to connect</button>
+	   <p>
+	   
+            <input type="text" class="i1" size="40" id="nick" name="nick" placeholder="Nickname">
+
+            <button onclick="change_nick();" class="b1" id="NickButton" >Save Nickname</button>
+			
+			
+		</p>    
+		<input type="text" class="i2" size="40" id="this_nick" name="this_nick" value="User" readonly> 
+	   <form>
+	   
             <p>
-                <textarea class="t2" name="textarea" cols="265" rows="40" readonly="readonly" placeholder="Chat history"></textarea> 
-                 <p style="text-align: right"><button class="b1">Delete</button> <button class="b1">Edit</button>
+                <textarea class="t2" name="textarea" id="textarea" cols="265" rows="40" readonly="readonly" placeholder="Chat history"></textarea> 
+                 <p style="text-align: right"><button class="b11">Delete</button> <button class="b11">Edit</button>
             </p>
             <p>
-                <textarea class="t1" name="massage" cols="240" rows="5" placeholder="Enter a message..." ></textarea>
-                <input type="image" src="homepage/Send.gif" name="image" width="100" height="80">
-                
+                <textarea class="t1" name="message" id="message" cols="240" rows="5" placeholder="Enter a message..." ></textarea>
+                <input type="button" onclick="send();" class="b8" id="MessageButton" ></button>
             </p>
         </form>
+		</section>
+		</div>
     </body>
 </html>

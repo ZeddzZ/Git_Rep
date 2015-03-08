@@ -13,9 +13,23 @@
     border:3px solid #85A0C9;
     border-radius: 30px;
     } 
+ .i2{
+    position:absolute;
+    top: 120px;
+font-weight: 600;
+    } 
     .b1{
         background: #ffffff;
-        left: -50px;        
+        left: 300px;        
+        top: 25px;
+        position: relative;
+        display: inline-block;
+        border-radius: 30px;
+        
+        }
+ .b11{
+        background: #ffffff;
+        left: -50px;
         position: relative;
         display: inline-block;
         border-radius: 30px;
@@ -69,6 +83,18 @@
     border:3px solid #85A0C9;
     border-radius: 30px;
     } 
+.b8{
+    position:relative;
+    top: 45px;
+height: 80px;
+width: 100px;
+background: url('Send.gif');
+    } 
+.b9{
+    position:absolute;
+    top: 60px;
+    left:400px;
+    } 
 body{
     background:#FFFFE0;
     }
@@ -80,11 +106,15 @@ body{
         }
     
     .t2 {
+position:relative;
+top: 50px;
         overflow-y: scroll;
         outline: none;
         border: 1px solid #999; 
 } 
 .t1 {
+position:relative;
+top: 50px;
         outline: none;
         border: 1px solid #999; 
 }
