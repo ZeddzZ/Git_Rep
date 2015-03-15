@@ -82,7 +82,7 @@ function reloadHistory() {
 function deleteMessage() {
     if (document.getElementById("change").value != "") {
         var message = document.getElementById("change").value;
-        if (message > historyList.length - 1) {
+        if (message > historyList.length) {
             alert("Incorrect index!");
             document.getElementById("change").value = "";
             return;
@@ -103,7 +103,7 @@ function deleteMessage() {
 function editMessage() {
     if (document.getElementById("change").value != "") {
         messageIndex = document.getElementById("change").value;
-        if (messageIndex > historyList.length - 1) {
+        if (messageIndex > historyList.length) {
             alert("Incorrect index!");
             document.getElementById("change").value = "";
             return;
@@ -128,8 +128,8 @@ function endEdit() {
     historyList[messageIndex - 1] = document.getElementById("message").value + "      //Message edited by " + newNick + "//";
     document.getElementById("message").value = oldMessage;
     document.getElementById("MessageButton").setAttribute("onclick", "send();");
-    document.getElementById("NickButton").setAttribute("disabled", "false");
-    document.getElementById("edit").setAttribute("disabled", "false");
-    document.getElementById("delete").setAttribute("disabled", "false");
+    document.getElementById("NickButton").removeAttribute("disabled");
+    document.getElementById("edit").removeAttribute("disabled");
+    document.getElementById("delete").removeAttribute("disabled");
     reloadHistory();
 }
