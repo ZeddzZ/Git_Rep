@@ -33,13 +33,13 @@
 		<input type="text" class="i2" size="40" id="this_nick" name="this_nick" value="User" readonly> 
 	   <form>
 	   
-            <p>
                 <textarea class="t2" name="textarea" id="textarea" cols="265" rows="40" readonly="readonly" placeholder="Chat history"></textarea> 
-                 <p style="text-align: right"><button class="b11">Delete</button> <button class="b11">Edit</button>
-            </p>
-            <p>
+                 <p style="text-align: right"><input type="button" id="delete" class="b11" onclick="deleteMessage()" value="Delete"><input type="button" id="edit" class="b11" onclick="editMessage()" value="Edit">
+				 <textarea  class="t3" name="change" cols="10" rows="1" id="change"></textarea> 
+				 
+			<p>
                 <textarea class="t1" name="message" id="message" cols="240" rows="5" placeholder="Enter a message..." ></textarea>
-                <input type="button" onclick="send();" class="b8" id="MessageButton" ></button>
+                <input type="button" onclick="send();" class="b8" id="MessageButton" >		
             </p>
         </form>
 		</section>

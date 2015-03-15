@@ -30,11 +30,21 @@ font-weight: 600;
  .b11{
         background: #ffffff;
         left: -50px;
+top: 30px;
         position: relative;
         display: inline-block;
         border-radius: 30px;
-        
         }
+.b12{
+top: 140px;
+left: -40px;
+        position: relative;
+}
+.t3 {
+left: -30px;
+top: 40px;
+        position: relative;
+}
 .b2{
     background: #7FFF00;
     top: 60px;
