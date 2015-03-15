@@ -4,10 +4,15 @@ var messageIndex;
 var newNick = "User";
 
 function run() {
+    alert("Nick!");
     newNick.value = restoreNick();
+    alert("Nick!");
     document.getElementById("nick").value = newNick.value;
+    alert("Nick!");
     historyList = restoreHistory();
-    reloadHistory();
+    alert("History!");
+    reloadHistory(); 
+    alert("History!");
 }
 function storeNick(newNick) {
     if(typeof(Storage) == "undefined") {
@@ -77,6 +82,16 @@ function reloadHistory() {
 function deleteMessage() {
     if (document.getElementById("change").value != "") {
         var message = document.getElementById("change").value;
+        if (message > historyList.length - 1) {
+            alert("Incorrect index!");
+            document.getElementById("change").value = "";
+            return;
+        }
+        if (isNaN(parseInt(message))) {
+            alert("Incorrect input!");
+            document.getElementById("change").value = "";
+            return;
+        }
         var del = historyList[message - 1];
         historyList[message - 1] = "Message deleted";
         alert("Message \"" + del + "\" deleted");
@@ -88,6 +103,16 @@ function deleteMessage() {
 function editMessage() {
     if (document.getElementById("change").value != "") {
         messageIndex = document.getElementById("change").value;
+        if (messageIndex > historyList.length - 1) {
+            alert("Incorrect index!");
+            document.getElementById("change").value = "";
+            return;
+        }
+        if (isNaN(parseInt(messageIndex))) {
+            alert("Incorrect input!");
+            document.getElementById("change").value = "";
+            return;
+        }
         var edit = historyList[messageIndex - 1];
         oldMessage = document.getElementById("message").value;
         var editMessage = document.getElementById("message");
