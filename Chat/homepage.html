@@ -13,10 +13,10 @@
 
         </style>
     </head>
-    <body onload="run();>
+    <body onload="run();">
 	<div>
 	<section class="chat">
-        <h1 align="center" style="color:#000000" >CHATROOM by ZeddzZ version 0.1</h1> 
+        <h1 align="center" style="color:#000000" >CHATROOM by ZeddzZ version 0.2</h1> 
         <button class="b3">Connect...</button>
         <button class="b5">Settings</button>
         <button class="b6">Help</button>
@@ -34,7 +34,10 @@
 	   <form>
 	   
                 <textarea class="t2" name="textarea" id="textarea" cols="265" rows="40" readonly="readonly" placeholder="Chat history"></textarea> 
-                 <p style="text-align: right"><input type="button" id="delete" class="b11" onclick="deleteMessage()" value="Delete"><input type="button" id="edit" class="b11" onclick="editMessage()" value="Edit">
+                 <p style="text-align: right">
+				 <input type="button" id="clean" class="b11" onclick="cleanHistory()" value="Delete History">
+				 <input type="button" id="delete" class="b11" onclick="deleteMessage()" value="Delete">
+				 <input type="button" id="edit" class="b11" onclick="editMessage()" value="Edit">
 				 <textarea  class="t3" name="change" cols="10" rows="1" id="change"></textarea> 
 				 
 			<p>
