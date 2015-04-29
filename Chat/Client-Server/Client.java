@@ -1,0 +1,120 @@
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
+
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.Random;
+
+public class Client implements Runnable {
+    private List<DataMessage> messHist = new ArrayList<DataMessage>();
+    private MessageExchange messageExchange = new MessageExchange();
+    private String host;
+    private Integer port;
+    private String userName = "User" + (new Random()).nextInt(100);
+
+    public Client(String host, Integer port) {
+        this.host = host;
+        this.port = port;
+    }
+
+    public static void main(String[] args) {
+        if (args.length != 2)
+            System.out.println("Usage: java ChatClient host port");
+        else {
+            System.out.println("Connection to server...");
+            String serverHost = args[0];
+            Integer serverPort = Integer.parseInt(args[1]);
+            Client client = new Client(serverHost, serverPort);
+            new Thread(client).start();
+            //System.out.println("Connected to server: " + serverHost + ":" + serverPort);
+           // System.out.println("Your Username is " + Client.getUserName());
+            client.info();
+            client.listen();
+        }
+    }
+
+    private HttpURLConnection getHttpURLConnection() throws IOException {
+        URL url = new URL("http://" + host + ":" + port + "/chat?token=" + messageExchange.getToken(messHist.size()));
+        return (HttpURLConnection) url.openConnection();
+    }
+
+    public List<DataMessage> getMessages() {
+        List<DataMessage> list = new ArrayList<DataMessage>();
+        HttpURLConnection connection = null;
+        try {
+            connection = getHttpURLConnection();
+            connection.connect();
+            String response = messageExchange.inputStreamToString(connection.getInputStream());
+            JSONObject jsonObject = messageExchange.getJSONObject(response);
+            JSONArray jsonArray = (JSONArray) jsonObject.get("messages");
+            for (Object o: jsonArray) {
+                DataMessage data = DataMessage.parseDataMessage((JSONObject)o);
+                System.out.println(data.toString());
+                list.add(data);
+            }
+        } catch (IOException e) {
+            System.err.println("ERROR: " + e.getMessage());
+        } catch (ParseException e) {
+            System.err.println("ERROR: " + e.getMessage());
+        } finally {
+            if (connection != null)
+                connection.disconnect();
+        }
+        return list;
+    }
+
+    public void sendMessage(DataMessage message) {
+        HttpURLConnection connection = null;
+        try {
+            connection = getHttpURLConnection();
+            connection.setDoOutput(true);
+            connection.setRequestMethod("POST");
+            DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+            byte[] bytes = messageExchange.getClientSendMessageRequest(message).getBytes();
+            wr.write(bytes, 0, bytes.length);
+            wr.flush();
+            wr.close();
+            connection.getInputStream();
+        } catch (IOException e) {
+            System.err.println("ERROR: " + e.getMessage());
+        } finally {
+            if (connection != null)
+                connection.disconnect();
+        }
+    }
+
+    public void info() {
+        System.out.println("Connected to server: " + host + ":" + port);
+        System.out.println("Your Username is " + userName);
+    }
+    public void listen() {
+        while (666 > -666) {
+            List<DataMessage> list = getMessages();
+            if (list.size() > 0)
+                messHist.addAll(list);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                System.err.println("ERROR: " + e.getMessage());
+            }
+        }
+    }
+
+    @Override
+    public void run() {
+        Scanner scanner = new Scanner(System.in);
+        while (666 > -666) {
+            DataMessage message = new DataMessage(scanner.nextLine(),userName);
+            sendMessage(message);
+        }
+    }
+    public String getUserName() {
+        return userName;
+    }
+}

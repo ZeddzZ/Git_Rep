@@ -1,0 +1,131 @@
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
+import com.sun.net.httpserver.Headers;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class Server implements HttpHandler {
+    private List<DataMessage> messHist = new ArrayList<DataMessage>();
+    private MessageExchange messageExchange = new MessageExchange();
+    public static void main(String[] args) {
+        if (args.length != 1)
+            System.out.println("Usage: java Server port");
+        else {
+            try {
+                System.out.println("Server is starting...");
+                Integer port = Integer.parseInt(args[0]);
+                HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
+                System.out.println("Server started.");
+                String serverHost = InetAddress.getLocalHost().getHostAddress();
+                System.out.println("Get list of messages: GET http://" + serverHost + ":" + port + "/chat?token={token}");
+                System.out.println("Send message: POST http://" + serverHost + ":" + port + "/chat provide body json in format {\"message\" : \"{message}\"} ");
+                server.createContext("/chat", new Server());
+                server.setExecutor(null);
+                server.start();
+            } catch (IOException e) {
+                System.out.println("Error creating http server: " + e);
+            }
+        }
+    }
+
+    @Override
+    public void handle(HttpExchange httpExchange) throws IOException {
+        String response = "";
+        if ("GET".equals(httpExchange.getRequestMethod()))
+            response = doGet(httpExchange);
+        else if ("POST".equals(httpExchange.getRequestMethod()))
+            doPost(httpExchange);
+        else if ("DELETE".equals(httpExchange.getRequestMethod()))
+            doDel(httpExchange);
+        else if ("PUT".equals(httpExchange.getRequestMethod()))
+            doPut(httpExchange);
+        else
+            response = "Unsupported http method: " + httpExchange.getRequestMethod();
+        sendResponse(httpExchange, response);
+    }
+
+    private String doGet(HttpExchange httpExchange) {
+        String query = httpExchange.getRequestURI().getQuery();
+        if (query != null) {
+            Map<String, String> map = queryToMap(query);
+            String token = map.get("token");
+            if (token != null && !"".equals(token)) {
+                int index = messageExchange.getIndex(token);
+                return messageExchange.getServerResponse(messHist.subList(index, messHist.size()));
+            } else
+                return "Token query parameter is absent in url: " + query;
+        }
+        return "Absent query in url";
+    }
+
+    private void doPost(HttpExchange httpExchange) {
+        try {
+            DataMessage message = messageExchange.getClientMessage(httpExchange.getRequestBody());
+            System.out.println("Get Message: " + message);
+            messHist.add(message);
+        } catch (ParseException e) {
+            System.err.println("Invalid user message: " + httpExchange.getRequestBody() + " " + e.getMessage());
+        }
+    }
+    
+    private void doDel(HttpExchange httpExchange) {
+        DataMessage message = messHist.get(messHist.size() - 1);
+        System.out.println("Delete Message: " + message.getUsername() + ": " + message.getText());
+        messHist.remove(messHist.size() - 1);
+    }
+    
+    private void doPut(HttpExchange httpExchange) {
+        try {
+            DataMessage messageChange = messageExchange.getClientMessage(httpExchange.getRequestBody());
+            int idOfChangeMessage =  messageChange.getID();
+            if (idOfChangeMessage >= 0 && idOfChangeMessage < messHist.size()) {
+                DataMessage dataMessage = messHist.get(idOfChangeMessage);
+                dataMessage.setText(messageChange.getText());
+                dataMessage.setChange(true);
+            }
+        } catch (ParseException e) {
+            System.err.println("Invalid user message: " + httpExchange.getRequestBody() + " " + e.getMessage());
+        }
+    }
+    
+    private void sendResponse(HttpExchange httpExchange, String response) {
+        try {
+            byte[] bytes = response.getBytes();
+            Headers headers = httpExchange.getResponseHeaders();
+            headers.add("Access-Control-Allow-Origin","*");
+            if ("OPTIONS".equals(httpExchange.getRequestMethod()))
+                headers.add("Access-Control-Allow-Methods","PUT,DELETE,POST,GET,OPTIONS");
+            httpExchange.sendResponseHeaders(200, bytes.length);
+            OutputStream os = httpExchange.getResponseBody();
+            os.write( bytes);
+            os.flush();
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Map<String, String> queryToMap(String query) {
+        Map<String, String> result = new HashMap<String, String>();
+        for (String param : query.split("&")) {
+            String pair[] = param.split("=");
+            if (pair.length > 1)
+                result.put(pair[0], pair[1]);
+            else
+                result.put(pair[0], "");
+        }
+        return result;
+    }
+}
