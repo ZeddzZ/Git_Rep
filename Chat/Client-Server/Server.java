@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Server implements HttpHandler {
-    private List<DataMessage> messHist = new ArrayList<DataMessage>();
+    private List<DataMessage> history = new ArrayList<DataMessage>();
     private MessageExchange messageExchange = new MessageExchange();
     public static void main(String[] args) {
         if (args.length != 1)
@@ -48,7 +48,7 @@ public class Server implements HttpHandler {
         else if ("POST".equals(httpExchange.getRequestMethod()))
             doPost(httpExchange);
         else if ("DELETE".equals(httpExchange.getRequestMethod()))
-            doDel(httpExchange);
+            doDelete(httpExchange);
         else if ("PUT".equals(httpExchange.getRequestMethod()))
             doPut(httpExchange);
         else
@@ -63,7 +63,7 @@ public class Server implements HttpHandler {
             String token = map.get("token");
             if (token != null && !"".equals(token)) {
                 int index = messageExchange.getIndex(token);
-                return messageExchange.getServerResponse(messHist.subList(index, messHist.size()));
+                return messageExchange.getServerResponse(history.subList(index, history.size()));
             } else
                 return "Token query parameter is absent in url: " + query;
         }
@@ -74,24 +74,24 @@ public class Server implements HttpHandler {
         try {
             DataMessage message = messageExchange.getClientMessage(httpExchange.getRequestBody());
             System.out.println("Get Message: " + message);
-            messHist.add(message);
+            history.add(message);
         } catch (ParseException e) {
             System.err.println("Invalid user message: " + httpExchange.getRequestBody() + " " + e.getMessage());
         }
     }
     
-    private void doDel(HttpExchange httpExchange) {
-        DataMessage message = messHist.get(messHist.size() - 1);
-        System.out.println("Delete Message: " + message.getUsername() + ": " + message.getText());
-        messHist.remove(messHist.size() - 1);
+    private void doDelete(HttpExchange httpExchange) {
+        DataMessage message = history.get(history.size() - 1);
+        System.out.println("Delete Message: " + message.getNameUser() + ": " + message.getText());
+        history.remove(history.size() - 1);
     }
     
     private void doPut(HttpExchange httpExchange) {
         try {
             DataMessage messageChange = messageExchange.getClientMessage(httpExchange.getRequestBody());
             int idOfChangeMessage =  messageChange.getID();
-            if (idOfChangeMessage >= 0 && idOfChangeMessage < messHist.size()) {
-                DataMessage dataMessage = messHist.get(idOfChangeMessage);
+            if (idOfChangeMessage >= 0 && idOfChangeMessage < history.size()) {
+                DataMessage dataMessage = history.get(idOfChangeMessage);
                 dataMessage.setText(messageChange.getText());
                 dataMessage.setChange(true);
             }

@@ -3,20 +3,20 @@ import org.json.simple.JSONObject;
 
 public class DataMessage implements JSONAware {
     static int currId = 1;
-    private String username;
+    private String userName;
     private int id;
     private String text;
     private boolean isDeleted = false;
     private boolean isChanged = false;
 
     public DataMessage() {
-        username = "1";
+        userName = "1";
         text = "";
         id = currId++;
     }
     
-    public DataMessage(String text,String username) {
-        this.username = username;
+    public DataMessage(String text,String userName) {
+        this.userName = userName;
         this.text = text;
         id = currId++;
     }
@@ -37,8 +37,8 @@ public class DataMessage implements JSONAware {
         this.text = text;
     }
     
-    public String getUsername() {
-        return username;
+    public String getNameUser() {
+        return userName;
     }
     
     public int getID() {
@@ -58,7 +58,7 @@ public class DataMessage implements JSONAware {
     }
 
     public void deleteMessage() {
-        if (!isDeleted) {
+        if (isDeleted != true) {
             this.text = "message was deleted.";
             this.setDelete(true);
         }
@@ -67,7 +67,7 @@ public class DataMessage implements JSONAware {
     public static DataMessage parseDataMessage(JSONObject obj){
         DataMessage info = new DataMessage();
         if ((String)obj.get("user") != null)
-            info.username = (String)obj.get("user");
+            info.userName = (String)obj.get("user");
         info.text = (String)obj.get("message");
         info.id = Integer.parseInt(obj.get("id").toString());
         return info;
@@ -76,7 +76,7 @@ public class DataMessage implements JSONAware {
     @Override
     public String toJSONString(){
         JSONObject obj = new JSONObject();
-        obj.put("user", username);
+        obj.put("user", userName);
         obj.put("message", text);
         obj.put("id", id);
         return obj.toString();
@@ -84,7 +84,7 @@ public class DataMessage implements JSONAware {
     
     @Override
     public String toString() {
-        return username + ": " + text;
+        return userName + ": " + text;
     }
     
     @Override
@@ -99,20 +99,20 @@ import org.json.simple.JSONObject;
 
 public class DataMessage implements JSONAware {
     static int currId = 1;
-    private String username;
+    private String userName;
     private int id;
     private String text;
     private boolean deleted = false;
     private boolean changed = false;
 
     public Message() {
-        username = "1";
+        userName = "1";
         text = "";
         id = currId++;
     }
 
-    public Message(String text, String username) {
-        this.username = username;
+    public Message(String text, String userName) {
+        this.userName = userName;
         this.text = text;
         id = currId++;
     }
@@ -149,8 +149,8 @@ public class DataMessage implements JSONAware {
         this.text = text;
     }
 
-    public String getUsername() {
-        return username;
+    public String getNameUser() {
+        return userName;
     }
 
     public void deleteMessage() {
@@ -163,7 +163,7 @@ public class DataMessage implements JSONAware {
     public static Message parseDataMessage(JSONObject obj){
         Message info = new Message();
         if((String)obj.get("user") != null) {
-            info.username = (String)obj.get("user");
+            info.userName = (String)obj.get("user");
         }
         info.text = (String)obj.get("message");
         info.id = Integer.parseInt(obj.get("id").toString());
@@ -173,7 +173,7 @@ public class DataMessage implements JSONAware {
     @Override
     public String toJSONString(){
         JSONObject obj = new JSONObject();
-        obj.put("user", username);
+        obj.put("user", userName);
         obj.put("message", text);
         obj.put("id", id);
         return obj.toString();
@@ -181,7 +181,7 @@ public class DataMessage implements JSONAware {
     
     @Override
     public String toString(){
-        return username+" : "+text;
+        return userName+" : "+text;
     }
     
     @Override

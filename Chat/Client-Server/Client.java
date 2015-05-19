@@ -12,7 +12,7 @@ import java.util.Scanner;
 import java.util.Random;
 
 public class Client implements Runnable {
-    private List<DataMessage> messHist = new ArrayList<DataMessage>();
+    private List<DataMessage> history = new ArrayList<DataMessage>();
     private MessageExchange messageExchange = new MessageExchange();
     private String host;
     private Integer port;
@@ -32,15 +32,13 @@ public class Client implements Runnable {
             Integer serverPort = Integer.parseInt(args[1]);
             Client client = new Client(serverHost, serverPort);
             new Thread(client).start();
-            //System.out.println("Connected to server: " + serverHost + ":" + serverPort);
-           // System.out.println("Your Username is " + Client.getUserName());
-            client.info();
+            System.out.println("Connected to server: " + serverHost + ":" + serverPort);
             client.listen();
         }
     }
 
     private HttpURLConnection getHttpURLConnection() throws IOException {
-        URL url = new URL("http://" + host + ":" + port + "/chat?token=" + messageExchange.getToken(messHist.size()));
+        URL url = new URL("http://" + host + ":" + port + "/chat?token=" + messageExchange.getToken(history.size()));
         return (HttpURLConnection) url.openConnection();
     }
 
@@ -89,15 +87,11 @@ public class Client implements Runnable {
         }
     }
 
-    public void info() {
-        System.out.println("Connected to server: " + host + ":" + port);
-        System.out.println("Your Username is " + userName);
-    }
     public void listen() {
-        while (666 > -666) {
+        while (true) {
             List<DataMessage> list = getMessages();
             if (list.size() > 0)
-                messHist.addAll(list);
+                history.addAll(list);
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -109,12 +103,9 @@ public class Client implements Runnable {
     @Override
     public void run() {
         Scanner scanner = new Scanner(System.in);
-        while (666 > -666) {
+        while (true) {
             DataMessage message = new DataMessage(scanner.nextLine(),userName);
             sendMessage(message);
         }
-    }
-    public String getUserName() {
-        return userName;
     }
 }
